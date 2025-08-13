@@ -1,23 +1,37 @@
 import axios from "axios";
 
-// config
-const TOKEN = "8467421393:AAF7TV7ibZ2cns6UDhJH5vz958nrNzXZbcY"; // @BotFather dan olingan token
-const API_URL = `https://api.telegram.org/bot${TOKEN}`;
+const BOT_TOKEN = "8497548476:AAH14L-uRzQM-7zaw5ASknI5l5i_6wb7gEI";
+const API_URL = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
-// update olish funksiyasi
+/**
+ * WebHook
+ */
+// kimdir => /start => telegram => server => mana senga javob
+
+/**
+ * Pooling
+ */
+// kimdir => /start => telgram <= server
+
 async function getUpdates(offset) {
   console.log("offset ->", offset);
 
   const res = await axios.get(`${API_URL}/getUpdates?offset=${offset}`);
   console.log(res.data.result);
-  
 
   for (let update of res.data.result) {
     const chatId = update.message.chat.id;
     const msg = update.message.text;
 
+    if (msg == "/start") {
+      await sendMessage(chatId, "Botimizga xush kelibsiz");
+    } else if (msg == "/help") {
+      await sendMessage(chatId, "Sizga tez orada yodam beramiz ");
+    } else {
+      await sendMessage(chatId, "Invalid msg");
+    }
+
     // Foydalanuvchiga javob yuborish
-    await sendMessage(chatId, msg);
 
     console.log("bu ishladi", update);
 
@@ -27,29 +41,12 @@ async function getUpdates(offset) {
   setTimeout(() => getUpdates(offset), 1000);
 }
 
-// xabar yuborish funksiyasi
 async function sendMessage(chatId, text) {
-  const url = `${API_URL}/sendMessage`;
-  await axios.post(url, {
+  await axios.post(`${API_URL}/sendMessage`, {
     chat_id: chatId,
     text: text,
-    reply_markup: {
-      keyboard: [["Salom", "Nima gaplar"]],
-      resize_keyboard: true
-    },
   });
 }
 
-// botni ishga tushirish
-console.log("Bot ishga tushdi...");
+console.log("Bot ishladi");
 await getUpdates(0);
-
-/**
- * Webhook
- */
-// Kimdir => /start => telegram => server => mana senga javob
-
-/**
- * Pooling
- */
-// Kimdir => /start => telegram <= server
