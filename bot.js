@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { config } from "dotenv";
 config();
-console.log(process.env.PORT);
+console.log("PORT", process.env.PORT);
 
 const BOT_TOKEN = "8497548476:AAH14L-uRzQM-7zaw5ASknI5l5i_6wb7gEI";
 const API_URL = `https://api.telegram.org/bot${BOT_TOKEN}`;
